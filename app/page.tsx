@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Heart, ShoppingCart, Star } from 'lucide-react'
+import { Heart, ShoppingCart, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useStore, products } from "@/lib/store"
+import { useStore, products, type Product } from "@/lib/store"
 import { FilterSection } from "@/components/filter-section"
+import { ProductDetailModal } from "@/components/product-detail-modal"
 
 export default function FashionStore() {
   const [selectedGenders, setSelectedGenders] = useState<string[]>([])
@@ -16,6 +17,9 @@ export default function FashionStore() {
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState<number[]>([0, 500])
   const [sortBy, setSortBy] = useState<string>("popular")
+
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { favorites, toggleFavorite, addToCart } = useStore()
 
@@ -54,6 +58,16 @@ export default function FashionStore() {
     setSelectedMaterials([])
     setPriceRange([0, 500])
     setSortBy("popular")
+  }
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedProduct(null)
   }
 
   const filteredProducts = products.filter((product) => {
@@ -155,7 +169,7 @@ export default function FashionStore() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {sortedProducts.map((product) => (
-                <div key={product.id} className="group cursor-pointer">
+                <div key={product.id} className="group cursor-pointer" onClick={() => handleProductClick(product)}>
                   <div className="relative overflow-hidden rounded-lg bg-stone-100 dark:bg-stone-700 mb-4">
                     <img
                       src={product.image || "/placeholder.svg"}
@@ -173,7 +187,10 @@ export default function FashionStore() {
                         variant="ghost"
                         size="icon"
                         className="bg-white/80 dark:bg-stone-800/80 hover:bg-white dark:hover:bg-stone-800 h-8 w-8"
-                        onClick={() => toggleFavorite(product.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleFavorite(product.id)
+                        }}
                       >
                         <Heart
                           className={`h-4 w-4 ${
@@ -187,7 +204,10 @@ export default function FashionStore() {
                         variant="ghost"
                         size="icon"
                         className="bg-white/80 dark:bg-stone-800/80 hover:bg-white dark:hover:bg-stone-800 h-8 w-8"
-                        onClick={() => addToCart(product)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          addToCart(product)
+                        }}
                       >
                         <ShoppingCart className="h-4 w-4 text-stone-600 dark:text-stone-300" />
                       </Button>
@@ -344,6 +364,14 @@ export default function FashionStore() {
           </div>
         </div>
       </footer>
+      <ProductDetailModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onAddToCart={addToCart}
+        onToggleFavorite={toggleFavorite}
+        isFavorite={favorites.some((f) => f.id === selectedProduct?.id)}
+      />
     </div>
   )
 }
