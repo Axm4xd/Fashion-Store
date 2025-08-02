@@ -1,12 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Heart, ShoppingCart, Star } from "lucide-react"
-
+import { Heart, ShoppingCart, Star } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { FilterSection } from "@/components/filter-section"
 import { useStore, products } from "@/lib/store"
+import { FilterSection } from "@/components/filter-section"
 
 export default function FashionStore() {
   const [selectedGenders, setSelectedGenders] = useState<string[]>([])
@@ -71,7 +70,6 @@ export default function FashionStore() {
     )
   })
 
-  // Sort products
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "newest":
@@ -83,16 +81,32 @@ export default function FashionStore() {
       case "rating":
         return b.rating - a.rating
       default:
-        return b.rating - a.rating // Default to popular (by rating)
+        return b.rating - a.rating
     }
   })
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900 transition-colors">
-      {/* Filter Section */}
-      
+      <FilterSection
+        selectedGenders={selectedGenders}
+        selectedCategories={selectedCategories}
+        selectedColors={selectedColors}
+        selectedSizes={selectedSizes}
+        selectedBrands={selectedBrands}
+        selectedMaterials={selectedMaterials}
+        priceRange={priceRange}
+        sortBy={sortBy}
+        onGenderChange={handleGenderFilter}
+        onCategoryChange={handleCategoryFilter}
+        onColorChange={handleColorFilter}
+        onSizeChange={handleSizeFilter}
+        onBrandChange={handleBrandFilter}
+        onMaterialChange={handleMaterialFilter}
+        onPriceRangeChange={setPriceRange}
+        onSortChange={setSortBy}
+        onClearFilters={clearFilters}
+      />
 
-      {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-r from-stone-100 to-stone-200 dark:from-stone-800 dark:to-stone-700">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-stone-800 dark:text-stone-100 mb-6">
@@ -122,7 +136,6 @@ export default function FashionStore() {
         </div>
       </section>
 
-      {/* Products Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-8">
@@ -220,7 +233,6 @@ export default function FashionStore() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
       <section className="py-16 bg-stone-100 dark:bg-stone-800">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-stone-800 dark:text-stone-100 mb-4">Stay Fashion Forward</h2>
@@ -241,7 +253,6 @@ export default function FashionStore() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-stone-800 dark:bg-stone-900 text-white py-12 transition-colors">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -257,12 +268,12 @@ export default function FashionStore() {
               <ul className="space-y-2 text-stone-300">
                 <li>
                   <a href="/men" className="hover:text-white transition-colors">
-                    Men's Collection
+                    {"Men's Collection"}
                   </a>
                 </li>
                 <li>
                   <a href="/women" className="hover:text-white transition-colors">
-                    Women's Collection
+                    {"Women's Collection"}
                   </a>
                 </li>
                 <li>

@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Filter, ChevronDown, X, User, Shirt, Palette, Ruler, Tag, Scissors, DollarSign, Sparkles } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -13,14 +12,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider"
 
 interface FilterSectionProps {
-  selectedGenders: string[]
-  selectedCategories: string[]
-  selectedColors: string[]
-  selectedSizes: string[]
-  selectedBrands: string[]
-  selectedMaterials: string[]
-  priceRange: number[]
-  sortBy: string
+  selectedGenders?: string[]
+  selectedCategories?: string[]
+  selectedColors?: string[]
+  selectedSizes?: string[]
+  selectedBrands?: string[]
+  selectedMaterials?: string[]
+  priceRange?: number[]
+  sortBy?: string
   onGenderChange: (gender: string) => void
   onCategoryChange: (category: string) => void
   onColorChange: (color: string) => void
@@ -76,14 +75,14 @@ const colorMap: { [key: string]: string } = {
 }
 
 export function FilterSection({
-  selectedGenders,
-  selectedCategories,
-  selectedColors,
-  selectedSizes,
-  selectedBrands,
-  selectedMaterials,
-  priceRange,
-  sortBy,
+  selectedGenders = [],
+  selectedCategories = [],
+  selectedColors = [],
+  selectedSizes = [],
+  selectedBrands = [],
+  selectedMaterials = [],
+  priceRange = [0, 500],
+  sortBy = "popular",
   onGenderChange,
   onCategoryChange,
   onColorChange,
@@ -105,14 +104,13 @@ export function FilterSection({
     selectedMaterials.length
 
   const FilterContent = () => (
-    <div className="space-y-8">
-      {/* Gender Filter */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <div>
         <div className="flex items-center gap-2 mb-4">
           <User className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Gender</h3>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-3">
           {filterOptions.genders.map((gender) => (
             <div key={gender} className="flex items-center space-x-2">
               <Checkbox
@@ -128,13 +126,12 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Category Filter */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Shirt className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Category</h3>
         </div>
-        <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto">
+        <div className="space-y-3 max-h-48 overflow-y-auto">
           {filterOptions.categories.map((category) => (
             <div key={category} className="flex items-center space-x-2">
               <Checkbox
@@ -153,13 +150,12 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Color Filter */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Palette className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Color</h3>
         </div>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {filterOptions.colors.map((color) => (
             <div key={color} className="flex flex-col items-center space-y-1">
               <button
@@ -176,18 +172,17 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Size Filter */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Ruler className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Size</h3>
         </div>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {filterOptions.sizes.map((size) => (
             <button
               key={size}
               onClick={() => onSizeChange(size)}
-              className={`px-3 py-2 text-sm border rounded-lg transition-colors ${
+              className={`px-2 py-1 text-xs border rounded-lg transition-colors ${
                 selectedSizes.includes(size)
                   ? "bg-stone-800 dark:bg-stone-200 text-white dark:text-stone-800 border-stone-800 dark:border-stone-200"
                   : "bg-white dark:bg-stone-700 text-stone-600 dark:text-stone-300 border-stone-300 dark:border-stone-600 hover:bg-stone-50 dark:hover:bg-stone-600"
@@ -199,13 +194,12 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Brand Filter */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Tag className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Brand</h3>
         </div>
-        <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto">
+        <div className="space-y-3 max-h-48 overflow-y-auto">
           {filterOptions.brands.map((brand) => (
             <div key={brand} className="flex items-center space-x-2">
               <Checkbox
@@ -221,13 +215,12 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Material Filter */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Scissors className="h-4 w-4 text-stone-600 dark:text-stone-400" />
-          <h3 className="font-semibold text-stone-800 dark:text-stone-100">Material (Fabric)</h3>
+          <h3 className="font-semibold text-stone-800 dark:text-stone-100">Material</h3>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="space-y-3">
           {filterOptions.materials.map((material) => (
             <div key={material} className="flex items-center space-x-2">
               <Checkbox
@@ -246,8 +239,7 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Price Range Filter */}
-      <div>
+      <div className="md:col-span-2">
         <div className="flex items-center gap-2 mb-4">
           <DollarSign className="h-4 w-4 text-stone-600 dark:text-stone-400" />
           <h3 className="font-semibold text-stone-800 dark:text-stone-100">Price Range (USD)</h3>
@@ -258,7 +250,7 @@ export function FilterSection({
             <span>${priceRange[0]}</span>
             <span>${priceRange[1]}</span>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-3 gap-2 text-xs">
             <button
               onClick={() => onPriceRangeChange([0, 25])}
               className="px-2 py-1 bg-stone-100 dark:bg-stone-700 rounded hover:bg-stone-200 dark:hover:bg-stone-600"
@@ -293,9 +285,8 @@ export function FilterSection({
         </div>
       </div>
 
-      {/* Clear Filters */}
       {totalFilters > 0 && (
-        <div className="pt-4 border-t border-stone-200 dark:border-stone-600">
+        <div className="md:col-span-full pt-4 border-t border-stone-200 dark:border-stone-600">
           <Button
             variant="outline"
             onClick={onClearFilters}
@@ -310,9 +301,8 @@ export function FilterSection({
   )
 
   return (
-    <section className="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 transition-colors sticky top-32 z-40 shadow-sm">
+    <section className="bg-white dark:bg-stone-800 border-b border-stone-200 dark:border-stone-700 transition-colors  top-0 z-40 shadow-sm">
       <div className="container mx-auto px-4 py-6">
-        {/* Sort By Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -332,7 +322,6 @@ export function FilterSection({
               </SelectContent>
             </Select>
           </div>
-
           {totalFilters > 0 && (
             <Button
               variant="ghost"
@@ -365,10 +354,8 @@ export function FilterSection({
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-6">
-              <div className="bg-stone-50 dark:bg-stone-700 rounded-xl p-6 border border-stone-200 dark:border-stone-600">
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                  <FilterContent />
-                </div>
+              <div className="bg-stone-50 dark:bg-stone-700 rounded-xl p-6 border border-stone-200 dark:border-stone-600 max-h-[60vh] overflow-y-auto">
+                <FilterContent />
               </div>
             </CollapsibleContent>
           </Collapsible>
